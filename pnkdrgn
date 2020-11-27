@@ -1,0 +1,27 @@
+#!/usr/bin/env python3
+
+import sys
+import zlib
+
+with open("adjectives.txt", "r") as f:
+    adjectives = f.read().splitlines()
+
+with open("nouns.txt", "r") as f:
+    nouns = f.read().splitlines()
+
+with open("names.txt", "r") as f:
+    names = f.read().splitlines()
+
+def get_name(datastr):
+    third = len(datastr)//3
+    adj_hs = zlib.adler32(str.encode(datastr[:third]))
+    nou_hs = zlib.adler32(str.encode(datastr[third:third*2]))
+    nam_hs = zlib.adler32(str.encode(datastr[third*2:]))
+
+    adj = adjectives[adj_hs % len(adjectives)].capitalize()
+    nou = nouns[nou_hs % len(nouns)].capitalize()
+    name = names[nam_hs % len(names)].capitalize()
+
+    return f"{adj} {nou} {name}"
+
+print(get_name(sys.argv[1]))
